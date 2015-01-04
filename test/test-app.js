@@ -21,5 +21,6 @@ describe('avalon:app bower', function () {
       'bower.json',
       'package.json'
     ]);
+    console.log("done");
   });
 });
