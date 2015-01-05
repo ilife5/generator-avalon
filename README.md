@@ -46,9 +46,23 @@ Step3, select the widgets you want to install:
 
 ![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step3.png)
 
-Wait seconds, U will see the files:
+Wait seconds, and you will see the files:
 
-![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step4.png)
+```
+.
+├── README.md
+├── bower.json
+├── bower_components
+│   ├── avalon
+│   ├── mmAnimate
+│   ├── mmDeferred
+│   ├── mmRequest
+│   ├── mmRouter
+│   └── oniui
+└── src
+    ├── scripts
+    └── styles
+```
 
 ### Getting To Know Yeoman
 
