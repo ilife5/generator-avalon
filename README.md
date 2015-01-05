@@ -1,6 +1,6 @@
 # generator-avalon [![Build Status](https://secure.travis-ci.org/ilife5/generator-avalon.png?branch=master)](https://travis-ci.org/ilife5/generator-avalon)
 
-> [Yeoman](http://yeoman.io) generator
+>  avalon脚手架，使用[Yeoman](http://yeoman.io) generator作为生成器。 
 
 
 ## Getting Started
@@ -34,6 +34,21 @@ Finally, initiate the generator:
 ```bash
 yo avalon
 ```
+Step1, input the app name:
+
+![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step1.png)
+
+Step2, choose the pacakage manager(defualt is bower):
+
+![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step2.png)
+
+Step3, select the widgets you want to install:
+
+![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step3.png)
+
+Wait seconds, U will see the files:
+
+![](https://raw.githubusercontent.com/ilife5/life/master/statics/images/step4.png)
 
 ### Getting To Know Yeoman
 
