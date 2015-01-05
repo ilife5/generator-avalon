@@ -6,7 +6,7 @@ var helpers = require('yeoman-generator').test;
 var os = require('os');
 
 describe('avalon:app bower', function () {
-  this.timeout(20000);
+  this.timeout(10000);
   before(function (done) {
     helpers.run(path.join(__dirname, '../app'))
       .inDir(path.join(os.tmpdir(), './temp-test'))
@@ -14,13 +14,13 @@ describe('avalon:app bower', function () {
         packageManagement: "bower",
         appName: "avalon_yo"
       }).on('end', done);
+
+    setTimeout(done, 9000)
   });
 
   it('creates files', function () {
     assert.file([
-      'bower.json',
-      'package.json'
+      'bower.json'
     ]);
-    console.log("done");
   });
 });

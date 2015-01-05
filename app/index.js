@@ -6,27 +6,8 @@ var fs = require('fs');
 var path = require('path');
 var os = require('os')
 
-var fekitUtils = {
-  generateForders: function() {
-    var generator = this;
-    ["src", "src/scripts", "src/styles", "src/scripts/filters", "src/scripts/layout", "src/scripts/pages", "src/scripts/ui", 
-    "src/scripts/util", "src/scripts/vendor", "src/styles/components", "src/styles/layout", 
-    "src/styles/pages", "src/styles/vendor"].forEach(function(path) {
-        
-      fs.exists(generator.destinationPath(path), function(exists) {
-        if(exists) {
-          generator.log(chalk.cyan("identical") + " " + path);
-        } else {
-          fs.mkdir(generator.destinationPath(path), function(err) {
-            if(!err) {
-              generator.log(chalk.green("   create") + " " + path);
-            }
-          });
-        }
-      })
-    })
-  }, config: function() {
-    var widgetsMapping = {
+var widgetsMapping = {
+  fekit: {
       oniui: {
         name: "oniui",
         version: "0.2.*"
@@ -47,19 +28,8 @@ var fekitUtils = {
         name: "avalonAnimate",
         version: "*"
       }
-    };
-    var config = this.fs.readJSON(this.templatePath('_' + this.packageConfig));
-    this.widgets.forEach(function(name) {
-      config.dependencies[widgetsMapping[name].name] = widgetsMapping[name].version;
-    })
-    config.name = this.appName;
-    this.fs.write(this.destinationPath(this.packageConfig), JSON.stringify(config, undefined, 4));
-  }
-};
-
-var bowerUtils = {
-  config: function() {
-    var widgetsMapping = {
+    },
+  bower: {
       oniui: {
         name: "oniui",
         version: "*"
@@ -80,11 +50,35 @@ var bowerUtils = {
         name: "mmAnimate",
         version: "RubyLouvre/mmAnimate"
       }
-    };
+    }
+};
+
+var widgets = ["oniui", "request", "promise", "router", "animate"];
+
+var util = {
+  generateForders: function() {
+    var generator = this;
+    ["src", "src/scripts", "src/styles", "src/scripts/filters", "src/scripts/layout", "src/scripts/pages", "src/scripts/ui", 
+    "src/scripts/util", "src/scripts/vendor", "src/styles/components", "src/styles/layout", 
+    "src/styles/pages", "src/styles/vendor"].forEach(function(path) {
+        
+      fs.exists(generator.destinationPath(path), function(exists) {
+        if(exists) {
+          generator.log(chalk.cyan("identical") + " " + path);
+        } else {
+          fs.mkdir(generator.destinationPath(path), function(err) {
+            if(!err) {
+              generator.log(chalk.green("   create") + " " + path);
+            }
+          });
+        }
+      })
+    })
+  }, config: function(widgetsMapping) {
     var config = this.fs.readJSON(this.templatePath('_' + this.packageConfig));
     this.widgets.forEach(function(name) {
       config.dependencies[widgetsMapping[name].name] = widgetsMapping[name].version;
-    });
+    })
     config.name = this.appName;
     this.fs.write(this.destinationPath(this.packageConfig), JSON.stringify(config, undefined, 4));
   }
@@ -120,8 +114,8 @@ module.exports = yeoman.generators.Base.extend({
       type: 'checkbox',
       name: 'widgets',
       message: 'Select widgets',
-      default: ["oniui", "request", "promise", "router", "animate"],
-      choices: ["oniui", "request", "promise", "router", "animate"]
+      default: widgets,
+      choices: widgets
     }];
 
     this.prompt(prompts, function (props) {
@@ -148,16 +142,17 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath(this.packageConfig)
       );
 
+      //目录结构
+      util.generateForders.call(this);
+
       //for fekti package management
       if(this.packageManagement === "fekit") {
-        //目录结构
-        fekitUtils.generateForders.call(this);
-
+        
         //fekit.config
-        fekitUtils.config.call(this);
+        util.config.call(this, widgetsMapping.fekit);
 
         //README
-        this.fs.write(this.destinationPath("README.md"), "# " + this.appName + os.EOL + os.EOL + this.fs.read(this.templatePath("_README-fekit.md")))
+        this.fs.write(this.destinationPath("README.md"), "# " + this.appName + os.EOL + os.EOL + this.fs.read(this.templatePath("_README-fekit.md")));
 
         //encironment.yaml
         this.fs.copy(
@@ -171,14 +166,13 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('build.sh')
         );
       } else {
-        //npm pacage.json
-        this.fs.copy(
-          this.templatePath('_package.json'),
-          this.destinationPath('package.json')
-        );
 
         //bower.json
-        bowerUtils.config.call(this);
+        util.config.call(this, widgetsMapping.bower);
+
+         //README
+        this.fs.write(this.destinationPath("README.md"), "# " + this.appName + os.EOL + os.EOL + this.fs.read(this.templatePath("_README-bower.md")));
+
       }
     }
   },
