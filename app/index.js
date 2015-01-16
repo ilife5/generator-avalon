@@ -145,6 +145,12 @@ module.exports = yeoman.generators.Base.extend({
       //目录结构
       util.generateForders.call(this);
 
+      //build.sh
+      this.fs.copy(
+        this.templatePath('_package.json'),
+        this.destinationPath('package.json')
+      );
+
       //for fekti package management
       if(this.packageManagement === "fekit") {
         
@@ -183,10 +189,8 @@ module.exports = yeoman.generators.Base.extend({
       //fekit install
       this.log( chalk.red("fekit install") );
       this.spawnCommand('fekit', ['install'])  
-    } else {
-
-      //npm install && bower install
-      this.installDependencies();
     }
+
+      this.installDependencies();
   }
 });
