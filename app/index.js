@@ -223,7 +223,7 @@ module.exports = yeoman.generators.Base.extend({
 
           } else if (bowerInstall) {
             generator.log('something error has happened when excute bower installing or npm installing.')
-            generator.log('Please execute '  + chalk.yellow.bold('npm install & bower install') + ' and then excute' chalk.yellow.bold('yo avalon:oniui') + ' manually to finish the oniui packaging!');
+            generator.log('Please execute '  + chalk.yellow.bold('npm install & bower install') + ' and then excute' + chalk.yellow.bold('yo avalon:oniui') + ' manually to finish the oniui packaging!');
           }
         }
       }.bind(this)
