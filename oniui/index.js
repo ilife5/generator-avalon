@@ -8,7 +8,7 @@ function copyDirs(generator) {
   var oniuiNodePath = generator.destinationPath('bower_components/oniui_node/release/');
   /* 在使用writeFile方法时，因为oniui目录并没有创建，而node并不会自己创建目录，所以总是报错，也就是说writeFile可以保证在文件不存在的时候创建文件，但是目录也不存在那就没法正常运行 */
   generator.mkdir('src/scripts/vendor/oniui')
-  var oniuiPath = generator.destinationPath('src/scripts/vendor/oniui');
+  var oniuiPath = generator.destinationPath('src/scripts/vendor/oniui/');
 
   fs.readdir(oniuiNodePath, function(err, files) {
     if (!err) {
@@ -59,7 +59,7 @@ module.exports = yeoman.generators.Base.extend({
     
     if (!this.options.autoInstall) {
       var done = this.async();
-
+      generator.log('begin run modules-cat nodejs src -o dest');
       var modulesCatProcess = generator.spawnCommand('modules-cat', ['nodejs', generator.destinationPath('bower_components/oniui/'), '-o', generator.destinationPath('bower_components/oniui_node/src/'), '-s']);
 
       modulesCatProcess.on('close', function() {
@@ -113,7 +113,7 @@ module.exports = yeoman.generators.Base.extend({
       copyDirs(generator);
       rimraf(generator.destinationPath('bower_components/oniui_node'), function(err) {
         if (err) {
-          generator.log('Please excute ' + chalk.yellow.bold('rm -rf bower_components/oniui_node') + ' yourself.')
+          generator.log('Something error has happend, please excute ' + chalk.yellow.bold('rm -rf bower_components/oniui_node') + ' yourself.')
         } else {
           generator.log('complete !')
         }
