@@ -17,7 +17,8 @@
     "test": "mocha"
   },
   "files": [
-    "app"
+    "app",
+    "oniui"
   ],
   "keywords": [
     "yeoman-generator"
@@ -25,10 +26,12 @@
   "dependencies": {
     "yeoman-generator": "^0.18.0",
     "chalk": "^0.5.0",
-    "yosay": "^0.3.0"
+    "yosay": "^0.3.0",
+    "rimraf": "^2.2.8"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "rimraf": "^2.2.8"
   },
   "peerDependencies": {
     "yo": ">=1.0.0"
