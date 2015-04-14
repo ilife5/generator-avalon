@@ -32,7 +32,7 @@ var widgetsMapping = {
   bower: {
       oniui: {
         name: "oniui",
-        version: "*"
+        version: "RubyLouvre/avalon.oniui"
       },
       request: {
         name: "mmRequest",
@@ -151,7 +151,7 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('package.json')
       );
 
-      //for fekti package management
+      //for fekit package management
       if(this.packageManagement === "fekit") {
         
         //fekit.config
@@ -191,6 +191,6 @@ module.exports = yeoman.generators.Base.extend({
       this.spawnCommand('fekit', ['install'])  
     }
 
-      this.installDependencies();
+    this.installDependencies();
   }
 });
