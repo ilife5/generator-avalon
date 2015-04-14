@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>去哪儿avalon ui</title>
+        <link type="text/css" rel="stylesheet"  href="oniui.css"/>
+        <script src="oniui.js"></script>
+        <style>
+            .separation {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body class="ms-controller" ms-controller="uidemo">
+        <div ms-widget="accordion,aa,$aaOpts" class="separation"></div>
+        <div class="separation">
+            <ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"></ul>
+        </div>
+        <div class="separation" style="margin-bottom: 20px">
+            <div ms-widget="doublelist,nimei" ms-duplex="select"></div>
+        </div>
+        <div class="separation" style="clear:both; margin-top: 20px;position: relative;z-index: 201">
+            <input ms-widget="datepicker" data-datepicker-timer="true" ms-duplex="time"/>
+        </div>
+        <div class="separation" style="z-index: 200; position: relative">
+            <input ms-widget="datepicker" data-datepicker-change-month-and-year="true" />
+        </div>
+        <div ms-widget="daterangepicker" data-daterangepicker-shortcut="true" class="separation"></div>
+        <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to" data-daterangepicker-rules="aOpts" class="separation"></div>
+        <div ms-widget="coupledatepicker" data-coupledatepicker-start-day="0" class="separation"></div>
+        <div ms-widget="dialog,aa" data-dialog-modal="false" data-dialog-draggable="true" class="separation">
+            呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+            <p>{{message}}</p>
+        </div>
+        
+        <div class="separation">
+            <select ms-widget="dropdown"
+                ms-duplex="value"
+                > 
+                <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1">{{el.text}}</option>
+            </select>
+            <p>{{value}}</p>
+        </div>
+        <div class="separation">
+            <select ms-widget="switchdropdown,$,$opts" ms-duplex="d"></select>
+            <p>select：{{d}}</p>
+        </div>
+        <div class="separation">
+            <ul ms-widget="menu">
+                <li>动物</li>
+                <li>植物</li>
+                <li data-disabled="true">X物</li>
+                <li>人类
+                    <ul>
+                        <li data-disabled="true">火星人</li>
+                        <li>地球人
+                            <ul>
+                                <li><a href="#iddd">白人</a></li>
+                                <li>黑人</li>
+                                <li data-disabled="true">灰人</li>
+                            </ul>
+                        </li>
+                        <li>木星人</li>
+                        <li>金星人</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="separation">
+            <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="normal">
+        </div>
+        <div ms-widget="notice,b, $bOpts" class="separation">配置了header和content的提示信息，可以动态修改提示信息的content和header，以及提示信息类型，点击对应按钮看看效果哦</div>
+        <div class="separation">
+            <button ms-click="toggleNotice('b')">toggle notice b</button>
+            <button ms-click="changeHeader('b')">修改notice b的title</button>
+            <button ms-click="changeContent('b')">修改notice b的content</button>
+            <button ms-click="toggleType('b')">修改notice b的type</button>
+        </div>
+        <div ms-widget="pager" class="separation"></div>
+        <div ms-widget="simplegrid, simplegridB, $simplegridBOpts" class="separation"></div>
+        <div class="separation">
+            <input ms-duplex="p3" ms-widget="spinner" data-spinner-min="3"/>
+        </div>
+        <div class="separation">
+            <input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" data-textbox-limit="5" />
+            <p>输入框的值是： {{x}}</p>
+        </div>
+        <div ms-widget="smartgrid, sg1, $sg1Opts" class="separation"></div>
+        <button ms-click="render">重新渲染数据</button>
+        <script>
+            function getDatas(number) {
+                var data = []
+                for (var i = 0; i < number; i++) {
+                    data.push({
+                        description: "北上广经济型计划"+i,
+                        operate: i % 5 ? 0 : 1,
+                        buget: 5800,
+                        display: 13534646,
+                        click : 15932,
+                        clickRate : "50.21%",
+                        consume: 1135800,
+                        averageClickRate: 1.82,
+                        disable: i == 3 ? true : false,
+                        selected: false,
+                        checkboxShow: false
+                    })
+                }
+                data[2].checkboxShow = true
+                
+                // data[0].checkboxShow = false //当selectable.type为Checkbox时，设置checkboxShow为false会屏蔽掉列表行前面的选框，需要注意的是：设置checkboxShow为false，务必保证selected为false或者不存在selected的设置
+                return data
+            } 
+            function getData(n) {
+                var ret = []
+                for (var i = 0; i < n; i++) {
+                    ret.push({
+                        symbol: Math.random().toString(32).slice(4, 10),
+                        price: range(100, 200),
+                        change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
+                    })
+                }
+                return ret
+            }
+            function range(s, b) {
+                return s + Math.floor((b - s) * Math.random())
+            }
+            if (avalon.ui && avalon.ui.suggest) {
+                avalon.ui.suggest.strategies["test"] = function(value, done){
+                    // 添加策略
+                    // done( err , array ) {callback}
+                    setTimeout(function(){
+                        done(value ? [
+                            value + "1" ,
+                            value + "2" ,
+                            value + "3 这个建议项有点点长哦哦哦哦哦哦哦" ,
+                            value + "4" ,
+                            value + "5" ,
+                            value + "6" ,
+                            value + "7"  
+                        ] : [] )
+                    },100)
+                }
+            }
+            avalon.define("uidemo", function(vm) {
+                vm.$skipArray = ["doublelist", "pager"]
+                vm.p3 = 2
+                vm.x = "";
+                vm.render = function() {
+                    var data = getDatas(8)
+                    data[0].checkboxShow = true
+                    avalon.vmodels.sg1.render(data)
+                }
+                vm.$sg1Opts = {
+                    // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
+                    $skipArray: ["switchdropdown", "dropdown", "pager"],
+                    selectable: {
+                        type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
+                    },
+                    dropdownData: [{ // dropdown的数据信息
+                        name: "忙",
+                        value: "1"
+                    },{
+                        name: "不忙",
+                        value: "0"
+                    }],
+                    dropdown : {
+                        width: 100,
+                        listWidth: 100
+                    },
+                    htmlHelper: { // 渲染列数据的方法集合
+                        // 包装工资列的数据
+                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                            avalon.log("arguments is : ")
+                            avalon.log(arguments)
+                            return "$"+cellValue
+                        },
+                        // operate列包装成switchdropdown组件
+                        switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                            var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
+                                pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
+
+                            return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'>', openOption, pauseOption, '</select>'].join('')
+                        },
+                        // busy列包装成dropdown组件
+                        dropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                            var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
+                            return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '>' + option + '</select>'
+                        }
+                    },
+                    columns: [
+                        {
+                            key : "description",
+                            name : "竞价推广计划",
+                            sortable : false,
+                            isLock : true,
+                            align: "left",
+                            defaultValue: "北上广经济型计划",
+                            customClass: "ddd",
+                            width: 150
+                        }, {
+                            key: "operate",
+                            name: "操作",
+                            title: "操作",
+                            width: 110,
+                            format: "switchdropdown"
+                        }, {
+                            key : "buget",
+                            name : "预算",
+                            sortable : true,
+                            align: "right",
+                            defaultValue: "￥5800",
+                            width: 75,
+                            format: "$X" // 定义渲染数据的方法名
+                        }, {
+                            key : "display",
+                            name : "展现",
+                            sortable : true,
+                            align: "right",
+                            width: 98
+                        }, {
+                            key : "click",
+                            name : "点击",
+                            sortable : true,
+                            align: "right",
+                            width: 90
+                        }, {
+                            key : "clickRate",
+                            name : "点击率",
+                            sortable : true,
+                            align: "right",
+                            width: 90
+                        }, {
+                            key : "consume",
+                            name : "消费",
+                            sortable : true,
+                            align: "right",
+                            width: 85,
+                            format: "$X" // 定义渲染数据的方法名
+                        }, {
+                            key : "averageClickRate",
+                            name : "平均点击价格",
+                            sortable : true,
+                            align: "right",
+                            width: 115,
+                            format: "$X" // 定义渲染数据的方法名
+                        }
+                    ],
+                    data: getDatas(8)
+                }
+                vm.$simplegridBOpts = {
+                    columns: ["symbol", "price", "change"],
+                    data: [],
+                    pageable: true,
+                    pager: {
+                        perPages : 10,
+                        totalItems: 0,
+                        onInit: function(vmodel) {
+                            testVM.pagerVM = vmodel
+                        }
+                    }
+                }
+                vm.pager = {
+                    currentPage: 8,
+                    totalItems: 1436,
+                    showJumper: true
+                }
+                vm.$aaOpts = {
+                    data: [{
+                        'title': '标题1',
+                        'content': '正文1<p>fasdfsdaf</p>'
+                    }, {
+                        'title': '标题2',
+                        'content': '正文2'
+                    }],
+                    accordionClass: "oni-accordion-customClass",
+                    initIndex: 1,
+                    width: "500",
+                    onBeforeSwitch: function() {
+                        avalon.log(this);
+                        avalon.log(arguments);
+                        avalon.log("onBeforeSwitch callback");
+                    },
+                    onSwitch: function() {
+                        avalon.log("onSwitch callback");
+                    },
+                    multiple: true
+                }
+                vm.val = ['TUESDAY','MONDAY'];
+                vm.time = ""
+                vm.from = "2014-06-12"
+                vm.to = "2014-06-02"
+                vm.aOpts = {
+                    rules: 'null, 0D'
+                };
+                vm.doublelist = {
+                    data: [
+                        {name: "Lily", value: 1},
+                        {name: "Lucy", value: 2},
+                        {name: "Tom", value: 3},
+                        {name: "Harry", value: 4},
+                        {name: "Jim", value: 5}
+                    ],
+                    select: [5],
+                    change: function(newValue, oldValue, vmodel) {
+                        // avalon.log(vmodel.select)
+                    }
+                }
+                vm.select = []
+                vm.value = 2;
+                vm.data = [
+                    {
+                        value: 1,
+                        label: '1'
+                    }, {
+                        value: 2,
+                        label: '2label'
+                    }, {
+                        value: 3
+                    }, {
+                        value: 4,
+                        text: '4text'
+                    }
+                ];
+                vm.$opts = {
+                    switchOpt: [{
+                        value: 1,
+                        label : ' 配置启用',
+                        cls: 'g-icon-start',
+                        title: '启用',
+                        font: '&#xf111;'
+                    },
+                        {
+                            value: 2,
+                            label : ' 配置暂停',
+                            cls: 'g-icon-pause',
+                            title: '暂停',
+                            font: '&#xf04c;'
+                        }],
+                    value: 2
+                };
+                vm.d = 1;
+                vm.$bOpts = {
+                    header: "提示信息title",
+                    content: "提示信息content"
+                }
+                vm.changeHeader = function(id) {
+                    var vmodel = avalon.vmodels[id];
+                    vmodel.header = "new notice title"
+                }
+                vm.changeContent = function(id) {
+                    var vmodel = avalon.vmodels[id];
+                    vmodel.content = "new notice content, yeap !"
+                }
+                vm.toggleType = function(id) {
+                    var typeArr = ["info", "success", "error"];
+                    var noticeVM = avalon.vmodels[id];
+                    var index = Math.floor(Math.random() * 3)
+                    noticeVM.type = typeArr[index];
+                }
+                vm.toggleNotice = function(id) {
+                    var noticeVm = avalon.vmodels[id]
+                    noticeVm.toggle = !noticeVm.toggle
+                }
+            })
+            avalon.vmodels["uidemo"]["select"].$watch("length", function(n,o) {
+                avalon.log(avalon.vmodels["uidemo"]["select"].join(","))
+            })
+        </script>
+    </body>
+</html>

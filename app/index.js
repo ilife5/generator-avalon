@@ -54,7 +54,7 @@ var widgetsMapping = {
 };
 
 var widgets = ["oniui", "request", "promise", "router", "animate"];
-
+var components = ['datepicker', 'coupledatepicker', 'daterangepicker', 'at', 'carousel', 'checkboxlist', 'doublelist', 'flipswitch', 'loading','miniswitch', 'notice','pager', 'scrollbar', 'slider', 'smartgrid', 'simplegrid', 'spinner', 'switchdropdown', 'tab', 'menu', 'validation', 'dialog', 'textbox', 'button', 'dropdown', 'accordion']
 var util = {
   generateForders: function() {
     var generator = this;
@@ -92,7 +92,7 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
     var done = this.async();
-
+    var generator = this;
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the transcendent' + chalk.red('Avalon ') + ' generator!'
@@ -110,7 +110,18 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Which package management you like to use?',
       default: "bower",
       choices: ["bower", "fekit"]
-    }, {
+    }, { // yeoman 支持根据之前的user的答复来选择是否执行接下来的提问，具体是通过在when中添加判断返回是否执行此条prompt的标志，true为执行，false为跳过
+      when: function(response) {
+        if (response.packageManagement == 'bower' && !generator.options['skip-install']) {
+          return true
+        }
+      },
+      type: 'checkbox',
+      name: 'oniComponents',
+      message: 'Select oniui components',
+      default: components,
+      choices: components
+    },{
       type: 'checkbox',
       name: 'widgets',
       message: 'Select widgets',
@@ -128,7 +139,7 @@ module.exports = yeoman.generators.Base.extend({
       this.appName = props.appName;
       this.widgets = props.widgets;
       this.test = props.test;
-
+      this.oniComponents = props.oniComponents;
       if(this.packageManagement === "fekit") {
         this.packageConfig = "fekit.config"
       } else {
@@ -147,7 +158,6 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('_' + this.packageConfig),
         this.destinationPath(this.packageConfig)
       );
-
       //目录结构
       util.generateForders.call(this);
 
@@ -194,6 +204,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   install: function () {
+    var generator = this
     if(this.packageManagement === "fekit") {
 
       //fekit install
@@ -201,6 +212,31 @@ module.exports = yeoman.generators.Base.extend({
       this.spawnCommand('fekit', ['install'])
     }
 
-    this.installDependencies();
+    this.installDependencies({
+      skipInstall: this.options['skip-install'],
+      callback: function() {
+        if (generator.options["skip-install"]) {
+
+          generator.log("Please finish the " + chalk.yellow.bold('npm install & bower install') + " manually, and if you had have the bower installation selected, then execute " + chalk.yellow.bold('yo avalon:oniui') + ' manually to finish the oniui packaging!');
+        } else {
+
+          var oniuiExists = fs.existsSync(generator.destinationPath('bower_components/oniui'));
+          var bowerInstall = generator.packageManagement === "bower";
+
+          if (bowerInstall && oniuiExists) {
+            generator.log('bengin '+chalk.yellow('modules-cat nodejs ...'))
+
+            var modulesCatProcess = generator.spawnCommand('modules-cat', ['nodejs', generator.destinationPath('bower_components/oniui/'), '-o', generator.destinationPath('bower_components/oniui_node/src/'), '-s']);
+            modulesCatProcess.on('close', function() {
+              generator.composeWith("avalon:oniui", {options: {oniuiComponents: generator.oniComponents, autoInstall: true}});
+            })
+
+          } else if (bowerInstall) {
+            generator.log('something error has happened when excute bower installing or npm installing.')
+            generator.log('Please execute '  + chalk.yellow.bold('npm install & bower install') + ' and then excute' + chalk.yellow.bold('yo avalon:oniui') + ' manually to finish the oniui packaging!');
+          }
+        }
+      }.bind(this)
+    });
   }
 });
