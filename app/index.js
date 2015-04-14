@@ -54,6 +54,18 @@ var widgetsMapping = {
 };
 
 var widgets = ["oniui", "request", "promise", "router", "animate"];
+var bowerDevDependencies = {
+  "grunt": "^0.4.5",
+  "grunt-browserify": "^3.2.1",
+  "grunt-contrib-watch": "^0.6.1",
+  "grunt-contrib-clean": "^0.6.0",
+  "grunt-replace": "^0.8.0",
+  "grunt-contrib-concat": "^0.5.0",
+  "grunt-contrib-cssmin": "^0.11.0",
+  "grunt-contrib-uglify": "^0.7.0",
+  "remapify": "^1.4.4",
+  "modules-cat": "0.0.5"
+};
 var components = ['datepicker', 'coupledatepicker', 'daterangepicker', 'at', 'carousel', 'checkboxlist', 'doublelist', 'flipswitch', 'loading','miniswitch', 'notice','pager', 'scrollbar', 'slider', 'smartgrid', 'simplegrid', 'spinner', 'switchdropdown', 'tab', 'menu', 'validation', 'dialog', 'textbox', 'button', 'dropdown', 'accordion']
 var util = {
   generateForders: function() {
@@ -168,8 +180,6 @@ module.exports = yeoman.generators.Base.extend({
         _packageJson.scripts.test = "node_modules/elves/bin/elves";
         _packageJson.devDependencies.elves = "0.0.x";
       }
-      this.fs.write(this.destinationPath("package.json"), JSON.stringify(_packageJson, undefined, 4));
-
 
       //for fekit package management
       if(this.packageManagement === "fekit") {
@@ -199,7 +209,16 @@ module.exports = yeoman.generators.Base.extend({
          //README
         this.fs.write(this.destinationPath("README.md"), "# " + this.appName + os.EOL + os.EOL + this.fs.read(this.templatePath("_README-bower.md")));
 
+        //package.json add bower dependencies
+        var name;
+        for(name in bowerDevDependencies) {
+          _packageJson.devDependencies[name] = bowerDevDependencies[name];
+        }
+
       }
+
+      //package.json
+      this.fs.write(this.destinationPath("package.json"), JSON.stringify(_packageJson, undefined, 4));
     }
   },
 
