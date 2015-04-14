@@ -1,11 +1,7 @@
 {
   "name": "package",
   "version": "0.0.0",
-  "scripts": {
-      "test": "node_modules/elves/bin/elves"
-  },
+  "scripts": {},
   "dependencies": {},
-  "devDependencies": {
-      "elves": "0.0.x"
-  }
+  "devDependencies": {}
 }

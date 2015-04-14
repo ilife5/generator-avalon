@@ -58,10 +58,10 @@ var widgets = ["oniui", "request", "promise", "router", "animate"];
 var util = {
   generateForders: function() {
     var generator = this;
-    ["src", "src/scripts", "src/styles", "src/scripts/filters", "src/scripts/layout", "src/scripts/pages", "src/scripts/ui", 
-    "src/scripts/util", "src/scripts/vendor", "src/styles/components", "src/styles/layout", 
+    ["src", "src/scripts", "src/styles", "src/scripts/filters", "src/scripts/layout", "src/scripts/pages", "src/scripts/ui",
+    "src/scripts/util", "src/scripts/vendor", "src/styles/components", "src/styles/layout",
     "src/styles/pages", "src/styles/vendor"].forEach(function(path) {
-        
+
       fs.exists(generator.destinationPath(path), function(exists) {
         if(exists) {
           generator.log(chalk.cyan("identical") + " " + path);
@@ -116,12 +116,18 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Select widgets',
       default: widgets,
       choices: widgets
-    }];
+    }, {
+        type: 'confirm',
+        name: 'test',
+        message: 'Do you need a robust testing framework?',
+        default: false
+      }];
 
     this.prompt(prompts, function (props) {
       this.packageManagement = props.packageManagement;
       this.appName = props.appName;
       this.widgets = props.widgets;
+      this.test = props.test;
 
       if(this.packageManagement === "fekit") {
         this.packageConfig = "fekit.config"
@@ -135,7 +141,7 @@ module.exports = yeoman.generators.Base.extend({
 
   writing: {
     app: function () {
-      
+
       //bower.json || fekit.config
       this.fs.copy(
         this.templatePath('_' + this.packageConfig),
@@ -145,15 +151,19 @@ module.exports = yeoman.generators.Base.extend({
       //目录结构
       util.generateForders.call(this);
 
-      //build.sh
-      this.fs.copy(
-        this.templatePath('_package.json'),
-        this.destinationPath('package.json')
-      );
+      //package.json
+      var _packageJson = JSON.parse(this.fs.read(this.templatePath('_package.json')));
+      _packageJson.name = this.appName;
+      if(this.test) {
+        _packageJson.scripts.test = "node_modules/elves/bin/elves";
+        _packageJson.devDependencies.elves = "0.0.x";
+      }
+      this.fs.write(this.destinationPath("package.json"), JSON.stringify(_packageJson, undefined, 4));
+
 
       //for fekit package management
       if(this.packageManagement === "fekit") {
-        
+
         //fekit.config
         util.config.call(this, widgetsMapping.fekit);
 
@@ -188,7 +198,7 @@ module.exports = yeoman.generators.Base.extend({
 
       //fekit install
       this.log( chalk.red("fekit install") );
-      this.spawnCommand('fekit', ['install'])  
+      this.spawnCommand('fekit', ['install'])
     }
 
     this.installDependencies();
